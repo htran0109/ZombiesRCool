@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Character : MonoBehaviour {
 
-
     public float walkForce= 50f;
     public float jumpForce = 200f;
     private int jumpingCount = 0;
@@ -12,6 +11,11 @@ public class Character : MonoBehaviour {
     private bool grounded = false;
     private Vector3 speed;
     Rigidbody2D thisBody;
+
+    public const float MAX_PROJECTILE_COOLDOWN = 2f;
+    public Transform projectile;
+    private float projectileCooldown = 0f;
+    
 	// Use this for initialization
 	void Start () {
         transform.position = new Vector2(-3, -3);
@@ -23,7 +27,10 @@ public class Character : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         readKeys();
-        Debug.Log(speed.y);
+        if (projectileCooldown > 0)
+        {
+            projectileCooldown -= Time.deltaTime;
+        }
 
 	}
 
@@ -42,8 +49,12 @@ public class Character : MonoBehaviour {
             
             thisBody.AddForce(new Vector2(0, jumpForce));
         }
-
         
+        if(Input.GetKey(KeyCode.Space) && projectileCooldown <= 0f /*&& !holstered*/)
+        {
+            projectileCooldown = MAX_PROJECTILE_COOLDOWN;
+            Instantiate(projectile, gameObject.transform.position + new Vector3(1, 0), Quaternion.identity);
+        }
         
     }
     
