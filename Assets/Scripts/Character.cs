@@ -6,6 +6,10 @@ public class Character : MonoBehaviour {
 
     public const float MAX_WALK_SPEED = 3f;
     public const float SLOW_FORCE = 20f;
+    public const float KNOCKBACK_FORCE = 2000f;
+
+    private int invinceTimer = 0;
+    private int health = 5;
     public float walkForce= 50f;
     public float jumpForce = 1000f;
     public float ladderSpeed = 3f;
@@ -39,6 +43,7 @@ public class Character : MonoBehaviour {
 
         slowWalk();
         checkPlatforms();
+        invinceTimer--;
   	}
 
     void readKeys()
@@ -120,6 +125,28 @@ public class Character : MonoBehaviour {
             else if (thisBody.velocity.x < 0)
             {
                 thisBody.AddForce(new Vector2(SLOW_FORCE, 0));
+            }
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D coll)
+    {
+        Debug.Log("Hit: " + coll.gameObject.name);
+        if(coll.gameObject.name.Contains("Enemy") && invinceTimer <= 0)
+        {
+            invinceTimer = 20;
+            health--;
+            if(thisBody.velocity.x > 0)
+            {
+                thisBody.AddForce(new Vector2(-KNOCKBACK_FORCE, 0));
+            }
+            else
+            {
+                thisBody.AddForce(new Vector2(KNOCKBACK_FORCE, 0));
+            }
+            if(health == 0)
+            {
+                Destroy(gameObject);
             }
         }
     }
