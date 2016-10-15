@@ -76,8 +76,9 @@ public class Character : MonoBehaviour {
                 forceApply = walkUnholsteredForce;
                 maxSpeed = MAX_WALK_UNHOLSTERED_SPEED;
             }
-            else
+            else if (faceDirection == 1)
             {
+                transform.localScale += new Vector3(-2f * transform.localScale.x, 0, 0);
                 faceDirection = -1;
             }
 
@@ -101,8 +102,9 @@ public class Character : MonoBehaviour {
                 forceApply = walkUnholsteredForce;
                 maxSpeed = MAX_WALK_UNHOLSTERED_SPEED;
             }
-            else
+            else if (faceDirection == -1)
             {
+                transform.localScale += new Vector3 (-2f * transform.localScale.x, 0, 0);
                 faceDirection = 1;
             }
 
