@@ -9,13 +9,8 @@ public class Character : MonoBehaviour {
     public const float SLOW_FORCE = 20f;
     public const float KNOCKBACK_FORCE = 2000f;
     public const float MAX_AIM_ANGLE = 75f;
-<<<<<<< HEAD
     public const float MIN_AIM_ANGLE = -40f;
-    public const float ANGLE_AIM_RATE = 30f;
-=======
-    public const float MIN_AIM_ANGLE = -30f;
     public const float ANGLE_AIM_RATE = 40f;
->>>>>>> origin/dev/characterSpriteAnimation
 
     public float groundRayDist;
     private int invinceTimer = 0;
@@ -213,7 +208,9 @@ public class Character : MonoBehaviour {
             holsterCooldown = MAX_HOLSTER_COOLDOWN;
             holstered = !holstered;
             aimAngle = MIN_AIM_ANGLE;
-            
+            arm.transform.localEulerAngles = new Vector3(0, 0, aimAngle);
+            arm.transform.localPosition = armOffset + new Vector3(Mathf.Cos(aimAngle * Mathf.Deg2Rad), Mathf.Sin(aimAngle * Mathf.Deg2Rad), 0) * 2f;
+
         }
 
     }

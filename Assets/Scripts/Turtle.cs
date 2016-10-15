@@ -7,7 +7,7 @@ public class Turtle : MonoBehaviour {
     public GameObject key;
 
     public Vector3 keyPos;
-    private int health = 20;
+    private int health = 10;
 	// Use this for initialization
 	void Start () {
         Instantiate(dummy, new Vector3(transform.position.x,
@@ -17,7 +17,7 @@ public class Turtle : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    
 	}
 
     void OnCollisionEnter2D(Collision2D coll)
