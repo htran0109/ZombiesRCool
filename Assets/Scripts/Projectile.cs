@@ -3,13 +3,14 @@ using System.Collections;
 
 public class Projectile : MonoBehaviour {
 
-    public const float LAUNCH_FORCE = 400;
+    public const float LAUNCH_FORCE = 900f;
     private Rigidbody2D thisBody;
 
     // Use this for initialization
     void Start () {
         thisBody = GetComponent<Rigidbody2D>();
-        thisBody.AddForce(new Vector2(LAUNCH_FORCE, 0));
+        thisBody.AddForce(transform.right * LAUNCH_FORCE);
+        Debug.Log((Vector2) transform.right);
     }
 	
 	// Update is called once per frame
