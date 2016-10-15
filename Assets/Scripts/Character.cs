@@ -23,6 +23,7 @@ public class Character : MonoBehaviour {
     private bool grounded = false;
     private bool moving = false;
     private bool ladder = false;
+    private bool door = false;
     private bool ladderDown = false;
     Rigidbody2D thisBody;
 
@@ -135,6 +136,11 @@ public class Character : MonoBehaviour {
             {
                 thisBody.velocity = new Vector2(thisBody.velocity.x, ladderSpeed);
             }
+            if (door && GameManager.keyFound)
+            {
+                GameManager.switchLevel();
+                GameManager.keyFound = false;
+            }
             if (!holstered)
             {
                 if (aimAngle < MAX_AIM_ANGLE)
@@ -226,11 +232,24 @@ public class Character : MonoBehaviour {
         }
     }
 
+    void OnTriggerEnter2D(Collider2D coll)
+    {
+        if(coll.gameObject.name.Contains("Key"))
+        {
+            GameManager.keyFound = true;
+            GameObject.Destroy(coll.gameObject);
+        }
+    }
+
     void OnTriggerStay2D(Collider2D coll)
     {
         if(coll.gameObject.name.Contains("ladder"))
         {
             ladder = true;
+        }
+        if (coll.gameObject.name.Contains("Door"))
+        {
+            door = true;
         }
     }
 
@@ -239,6 +258,10 @@ public class Character : MonoBehaviour {
         if(coll.gameObject.name.Contains("ladder"))
         {
             ladder = false;
+        }
+        if (coll.gameObject.name.Contains("Door"))
+        {
+            door = false;
         }
     }
 

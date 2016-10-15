@@ -3,6 +3,7 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
+    public static bool keyFound = false;
 	// Use this for initialization
 	void Start () {
 	
@@ -12,4 +13,9 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public static void switchLevel()
+    {
+        Debug.Log("Switching Level");
+    }
 }
