@@ -7,9 +7,12 @@ public class Character : MonoBehaviour {
     public const float SLOW_FORCE = 20f;
     public float walkForce= 50f;
     public float jumpForce = 1000f;
+    public float ladderSpeed = 3f;
     private bool holstered = true;
     private bool grounded = false;
     private bool moving = false;
+    private bool ladder = false;
+    private bool ladderDown = false;
     Rigidbody2D thisBody;
     RaycastHit2D ground;
 	// Use this for initialization
@@ -23,6 +26,7 @@ public class Character : MonoBehaviour {
 	void FixedUpdate () {
         readKeys();
         slowWalk();
+        checkPlatforms();
   	}
 
     void readKeys()
@@ -53,16 +57,38 @@ public class Character : MonoBehaviour {
         }
         if(Input.GetKeyDown(KeyCode.UpArrow))
         {
-
-            ground = Physics2D.Raycast(transform.position, Vector2.down, 1f);
-            if (ground.collider.gameObject.name.Contains("Ground"))
+            if (!ladder)
             {
-                Debug.Log(ground.distance);
-                thisBody.AddForce(new Vector2(0, jumpForce));
+                ground = Physics2D.Raycast(transform.position, Vector2.down, 1f);
+                if (ground.collider && ground.collider.gameObject.name.Contains("Ground"))
+                {
 
+                    thisBody.AddForce(new Vector2(0, jumpForce));
+
+                }
+            }
+            
+        }
+        if(Input.GetKey(KeyCode.UpArrow))
+        {
+            if(ladder)
+            {
+                thisBody.velocity = new Vector2(thisBody.velocity.x, ladderSpeed);
+            }
+        }
+        ladderDown = false;
+        if(Input.GetKey(KeyCode.DownArrow))
+        {
+            if (ladder)
+            {
+                ladderDown = true;
+                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Character"),
+                               LayerMask.NameToLayer("Ground"), true);
+                thisBody.velocity = new Vector2(thisBody.velocity.x, -ladderSpeed);
             }
         }
         moving = false;
+
 
         
         
@@ -79,6 +105,39 @@ public class Character : MonoBehaviour {
             else if (thisBody.velocity.x < 0)
             {
                 thisBody.AddForce(new Vector2(SLOW_FORCE, 0));
+            }
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D coll)
+    {
+        if(coll.gameObject.name.Contains("ladder"))
+        {
+            ladder = true;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D coll)
+    {
+        if(coll.gameObject.name.Contains("ladder"))
+        {
+            ladder = false;
+        }
+    }
+
+    void checkPlatforms()
+    {
+        if (!ladderDown)
+        {
+            if (thisBody.velocity.y > 0)
+            {
+                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Character"),
+                                               LayerMask.NameToLayer("Ground"), true);
+            }
+            else
+            {
+                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Character"),
+                                               LayerMask.NameToLayer("Ground"), false);
             }
         }
     }
