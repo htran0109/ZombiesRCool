@@ -24,6 +24,7 @@ public class Character : MonoBehaviour {
     private bool moving = false;
     private bool ladder = false;
     private bool ladderDown = false;
+    private GameObject arm;
     Rigidbody2D thisBody;
 
     public int faceDirection = 1;
@@ -39,6 +40,7 @@ public class Character : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        arm = gameObject.transform.Find("CharacterArm").gameObject;
         transform.position = new Vector2(-3, -3);
         holstered = true;
         thisBody = GetComponent<Rigidbody2D>();
@@ -181,7 +183,7 @@ public class Character : MonoBehaviour {
             {
                 trueAngle = 180 - trueAngle;
             }
-            Instantiate(projectile, gameObject.transform.position + new Vector3(Mathf.Cos(trueAngle * Mathf.Deg2Rad), Mathf.Sin(trueAngle* Mathf.Deg2Rad)), Quaternion.AngleAxis(trueAngle, Vector3.forward));
+            Instantiate(projectile, arm.transform.position + new Vector3(Mathf.Cos(trueAngle * Mathf.Deg2Rad), Mathf.Sin(trueAngle* Mathf.Deg2Rad)), Quaternion.AngleAxis(trueAngle, Vector3.forward));
         }
 
         if (Input.GetKey(KeyCode.Z) && holsterCooldown <= 0f)
