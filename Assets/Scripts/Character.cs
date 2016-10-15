@@ -9,9 +9,10 @@ public class Character : MonoBehaviour {
     public const float SLOW_FORCE = 20f;
     public const float KNOCKBACK_FORCE = 2000f;
     public const float MAX_AIM_ANGLE = 75f;
-    public const float MIN_AIM_ANGLE = 15f;
+    public const float MIN_AIM_ANGLE = -30f;
     public const float ANGLE_AIM_RATE = 30f;
 
+    public float groundRayDist;
     private int invinceTimer = 0;
     private int health = 5;
     public float walkForce= 500f;
@@ -118,7 +119,7 @@ public class Character : MonoBehaviour {
         {
             if (!ladder && holstered)
             {
-                ground = Physics2D.Raycast(transform.position, Vector2.down, 1f);
+                ground = Physics2D.Raycast(transform.position, Vector2.down, groundRayDist);
                 if (ground.collider && ground.collider.gameObject.name.Contains("Ground"))
                 {
 
