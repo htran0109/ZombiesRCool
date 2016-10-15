@@ -1,7 +1,7 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZombiesRCool.CSharp", "ZombiesRCool.CSharp.csproj", "{A6C83232-F042-7479-9119-0638B9342197}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{50A37526-9A43-1206-D9AE-2A838D1FAECE}") = "ZombiesRCool", "Assembly-CSharp.csproj", "{0C7B8250-201B-008A-3884-F2B5F160EDB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,12 +9,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A6C83232-F042-7479-9119-0638B9342197}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6C83232-F042-7479-9119-0638B9342197}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A6C83232-F042-7479-9119-0638B9342197}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6C83232-F042-7479-9119-0638B9342197}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C7B8250-201B-008A-3884-F2B5F160EDB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C7B8250-201B-008A-3884-F2B5F160EDB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C7B8250-201B-008A-3884-F2B5F160EDB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C7B8250-201B-008A-3884-F2B5F160EDB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal

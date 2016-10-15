@@ -5,12 +5,17 @@ public class Character : MonoBehaviour {
 
 
     public const float MAX_WALK_SPEED = 3f;
+    public const float MAX_WALK_UNHOLSTERED_SPEED = 1f;
     public const float SLOW_FORCE = 20f;
     public const float KNOCKBACK_FORCE = 2000f;
+    public const float MAX_AIM_ANGLE = 75f;
+    public const float MIN_AIM_ANGLE = 15f;
+    public const float ANGLE_AIM_RATE = 30f;
 
     private int invinceTimer = 0;
     private int health = 5;
-    public float walkForce= 50f;
+    public float walkForce= 500f;
+    public float walkUnholsteredForce = 300f;
     public float jumpForce = 1000f;
     public float ladderSpeed = 3f;
     private bool holstered = true;
@@ -20,11 +25,17 @@ public class Character : MonoBehaviour {
     private bool ladderDown = false;
     Rigidbody2D thisBody;
 
+    public int faceDirection = 1;
+    public float aimAngle = 15f;
 
-    public const float MAX_PROJECTILE_COOLDOWN = 2f;
+    public const float MAX_PROJECTILE_COOLDOWN = 1f;
+    public const float MAX_HOLSTER_COOLDOWN = 1f;
     public Transform projectile;
+
     private float projectileCooldown = 0f;
+    private float holsterCooldown = 0f;
     RaycastHit2D ground;
+
 	// Use this for initialization
 	void Start () {
         transform.position = new Vector2(-3, -3);
@@ -41,6 +52,11 @@ public class Character : MonoBehaviour {
             projectileCooldown -= Time.deltaTime;
         }
 
+        if (holsterCooldown > 0)
+        {
+            holsterCooldown -= Time.deltaTime;
+        }
+
         slowWalk();
         checkPlatforms();
         invinceTimer--;
@@ -51,30 +67,56 @@ public class Character : MonoBehaviour {
         if(Input.GetKey(KeyCode.LeftArrow))
         {
             moving = true;
-            if (thisBody.velocity.x > -MAX_WALK_SPEED)
+            float forceApply = walkForce;
+            float maxSpeed = MAX_WALK_SPEED;
+
+            if (!holstered)
             {
-                thisBody.AddForce(new Vector2(-walkForce, 0));
+                forceApply = walkUnholsteredForce;
+                maxSpeed = MAX_WALK_UNHOLSTERED_SPEED;
             }
             else
             {
-                thisBody.velocity = new Vector2(-MAX_WALK_SPEED, thisBody.velocity.y);
+                faceDirection = -1;
+            }
+
+            if (thisBody.velocity.x > -maxSpeed)
+            {
+                thisBody.AddForce(new Vector2(-forceApply, 0));
+            }
+            else
+            {
+                thisBody.velocity = new Vector2(-maxSpeed, thisBody.velocity.y);
             }
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
             moving = true;
-            if (thisBody.velocity.x < MAX_WALK_SPEED)
+            float forceApply = walkForce;
+            float maxSpeed = MAX_WALK_SPEED;
+
+            if (!holstered)
             {
-                thisBody.AddForce(new Vector2(walkForce, thisBody.velocity.y));
+                forceApply = walkUnholsteredForce;
+                maxSpeed = MAX_WALK_UNHOLSTERED_SPEED;
             }
             else
             {
-                thisBody.velocity = new Vector2(MAX_WALK_SPEED, thisBody.velocity.y);
+                faceDirection = 1;
+            }
+
+            if (thisBody.velocity.x < maxSpeed)
+            {
+                thisBody.AddForce(new Vector2(forceApply, thisBody.velocity.y));
+            }
+            else
+            {
+                thisBody.velocity = new Vector2(maxSpeed, thisBody.velocity.y);
             }
         }
         if(Input.GetKeyDown(KeyCode.UpArrow))
         {
-            if (!ladder)
+            if (!ladder && holstered)
             {
                 ground = Physics2D.Raycast(transform.position, Vector2.down, 1f);
                 if (ground.collider && ground.collider.gameObject.name.Contains("Ground"))
@@ -88,30 +130,63 @@ public class Character : MonoBehaviour {
         }
         if(Input.GetKey(KeyCode.UpArrow))
         {
-            if(ladder)
+            if (ladder && holstered)
             {
                 thisBody.velocity = new Vector2(thisBody.velocity.x, ladderSpeed);
+            }
+            if (!holstered)
+            {
+                if (aimAngle < MAX_AIM_ANGLE)
+                {
+                    aimAngle += Time.deltaTime * ANGLE_AIM_RATE;
+                }
+                else
+                {
+                    aimAngle = MAX_AIM_ANGLE;
+                }
             }
         }
         ladderDown = false;
         if(Input.GetKey(KeyCode.DownArrow))
         {
-            if (ladder)
+            if (ladder && holstered)
             {
                 ladderDown = true;
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Character"),
                                LayerMask.NameToLayer("Ground"), true);
                 thisBody.velocity = new Vector2(thisBody.velocity.x, -ladderSpeed);
             }
+            if (!holstered)
+            {
+                if (aimAngle > MIN_AIM_ANGLE)
+                {
+                    aimAngle -= Time.deltaTime * ANGLE_AIM_RATE;
+                }
+                else
+                {
+                    aimAngle = MIN_AIM_ANGLE;
+                }
+            }
         }
         moving = false;
         
-        if(Input.GetKey(KeyCode.Space) && projectileCooldown <= 0f /*&& !holstered*/)
+        if(Input.GetKey(KeyCode.X) && projectileCooldown <= 0f && !holstered)
         {
             projectileCooldown = MAX_PROJECTILE_COOLDOWN;
-            Instantiate(projectile, gameObject.transform.position + new Vector3(1, 0), Quaternion.identity);
+            float trueAngle = aimAngle;
+            if (faceDirection < 0)
+            {
+                trueAngle = 180 - trueAngle;
+            }
+            Instantiate(projectile, gameObject.transform.position + new Vector3(Mathf.Cos(trueAngle * Mathf.Deg2Rad), Mathf.Sin(trueAngle* Mathf.Deg2Rad)), Quaternion.AngleAxis(trueAngle, Vector3.forward));
         }
-        
+
+        if (Input.GetKey(KeyCode.Z) && holsterCooldown <= 0f)
+        {
+            holsterCooldown = MAX_HOLSTER_COOLDOWN;
+            holstered = !holstered;
+        }
+
     }
 
     void slowWalk()
@@ -131,7 +206,6 @@ public class Character : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D coll)
     {
-        Debug.Log("Hit: " + coll.gameObject.name);
         if(coll.gameObject.name.Contains("Enemy") && invinceTimer <= 0)
         {
             invinceTimer = 20;
