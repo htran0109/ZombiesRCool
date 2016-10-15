@@ -3,11 +3,9 @@ using System.Collections;
 
 public class Character : MonoBehaviour {
 
-<<<<<<< HEAD:Assets/Scripts/Character.cs
-=======
+
     public const float MAX_WALK_SPEED = 3f;
     public const float SLOW_FORCE = 20f;
->>>>>>> master:Assets/Character.cs
     public float walkForce= 50f;
     public float jumpForce = 1000f;
     public float ladderSpeed = 3f;
@@ -17,15 +15,12 @@ public class Character : MonoBehaviour {
     private bool ladder = false;
     private bool ladderDown = false;
     Rigidbody2D thisBody;
-<<<<<<< HEAD:Assets/Scripts/Character.cs
+
 
     public const float MAX_PROJECTILE_COOLDOWN = 2f;
     public Transform projectile;
     private float projectileCooldown = 0f;
-    
-=======
     RaycastHit2D ground;
->>>>>>> master:Assets/Character.cs
 	// Use this for initialization
 	void Start () {
         transform.position = new Vector2(-3, -3);
@@ -36,18 +31,15 @@ public class Character : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
         readKeys();
-<<<<<<< HEAD:Assets/Scripts/Character.cs
+
         if (projectileCooldown > 0)
         {
             projectileCooldown -= Time.deltaTime;
         }
 
-	}
-=======
         slowWalk();
         checkPlatforms();
   	}
->>>>>>> master:Assets/Character.cs
 
     void readKeys()
     {
@@ -89,8 +81,6 @@ public class Character : MonoBehaviour {
             }
             
         }
-<<<<<<< HEAD:Assets/Scripts/Character.cs
-=======
         if(Input.GetKey(KeyCode.UpArrow))
         {
             if(ladder)
@@ -110,9 +100,6 @@ public class Character : MonoBehaviour {
             }
         }
         moving = false;
-
-
->>>>>>> master:Assets/Character.cs
         
         if(Input.GetKey(KeyCode.Space) && projectileCooldown <= 0f /*&& !holstered*/)
         {
