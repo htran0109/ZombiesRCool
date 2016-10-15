@@ -38,11 +38,14 @@ public class Character : MonoBehaviour {
     private float holsterCooldown = 0f;
     RaycastHit2D ground;
 
+    private GameManager gameManager;
+
 	// Use this for initialization
 	void Start () {
         transform.position = new Vector2(-3, -3);
         holstered = true;
         thisBody = GetComponent<Rigidbody2D>();
+        gameManager = (GameManager)GameObject.Find("GameManager").GetComponent<GameManager>();
 	}
 	
 	// Update is called once per frame
@@ -118,7 +121,12 @@ public class Character : MonoBehaviour {
         }
         if(Input.GetKeyDown(KeyCode.UpArrow))
         {
-            if (!ladder && holstered)
+            if (door && GameManager.keyFound)
+            {
+                gameManager.switchLevel();
+                GameManager.keyFound = false;
+            }
+            else if (!ladder && holstered)
             {
                 ground = Physics2D.Raycast(transform.position, Vector2.down, groundRayDist);
                 if (ground.collider && ground.collider.gameObject.name.Contains("Ground"))
@@ -136,11 +144,7 @@ public class Character : MonoBehaviour {
             {
                 thisBody.velocity = new Vector2(thisBody.velocity.x, ladderSpeed);
             }
-            if (door && GameManager.keyFound)
-            {
-                GameManager.switchLevel();
-                GameManager.keyFound = false;
-            }
+
             if (!holstered)
             {
                 if (aimAngle < MAX_AIM_ANGLE)

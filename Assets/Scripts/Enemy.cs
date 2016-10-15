@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour {
     public const float KNOCKBACK_FORCE = 800f;
 
     private bool firstSeen = true;
+    private int health = 5;
     private int hitTimer = 0;
     public LayerMask visionMask;
     public AudioSource seenNoiseSource;
@@ -131,6 +132,14 @@ public class Enemy : MonoBehaviour {
                 thisBody.AddForce(new Vector2(-KNOCKBACK_FORCE, 0));
             }
         }
+        if(coll.gameObject.name.Contains("Projectile"))
+        {
+            health--;
+            if(health <= 0)
+            {
+                GameObject.Destroy(gameObject);
+            }
+        }
     }
 
     void slowWalk()
@@ -147,4 +156,6 @@ public class Enemy : MonoBehaviour {
             }
         }
     }
+
+
 }
