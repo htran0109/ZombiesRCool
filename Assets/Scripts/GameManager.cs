@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
     public GameObject platformGround;
     public GameObject key;
     public GameObject door;
+    public GameObject turtle;
 
 
     public Vector3 ladder1Level2;
@@ -18,6 +19,8 @@ public class GameManager : MonoBehaviour {
     public Vector3 platformGround1Level2;
     public Vector3 platformGround2Level2;
     public Vector3 characterLevel2;
+    public Vector3 turtleLevel2;
+    public Vector3 doorLevel2;
 	// Use this for initialization
 	void Start () {
 	
@@ -33,6 +36,7 @@ public class GameManager : MonoBehaviour {
         Debug.Log("Switching Level");
         if(level == 1)
         {
+            level++;
             foreach (GameObject o in Object.FindObjectsOfType<GameObject>())
             {
                 if (!o.name.Contains("Character") && !o.name.Contains("Health")
@@ -45,8 +49,9 @@ public class GameManager : MonoBehaviour {
             Instantiate(ladder, ladder1Level2, new Quaternion());
             Instantiate(ladder, ladder2Level2, new Quaternion());
             Instantiate(platformGround, platformGround1Level2, new Quaternion());
-            Instantiate(platformGround, platformGround2Level2, new Quaternion());
             Instantiate(bottomGround, bottomGroundLevel2, new Quaternion());
+            Instantiate(turtle, turtleLevel2, new Quaternion());
+            Instantiate(door, doorLevel2, new Quaternion());
             GameObject.Find("Character").transform.position = characterLevel2;
         }
     }

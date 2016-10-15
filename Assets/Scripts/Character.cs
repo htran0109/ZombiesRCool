@@ -9,7 +9,7 @@ public class Character : MonoBehaviour {
     public const float SLOW_FORCE = 20f;
     public const float KNOCKBACK_FORCE = 2000f;
     public const float MAX_AIM_ANGLE = 75f;
-    public const float MIN_AIM_ANGLE = -30f;
+    public const float MIN_AIM_ANGLE = -40f;
     public const float ANGLE_AIM_RATE = 30f;
 
     public float groundRayDist;
@@ -192,10 +192,12 @@ public class Character : MonoBehaviour {
             Instantiate(projectile, gameObject.transform.position + new Vector3(Mathf.Cos(trueAngle * Mathf.Deg2Rad), Mathf.Sin(trueAngle* Mathf.Deg2Rad)), Quaternion.AngleAxis(trueAngle, Vector3.forward));
         }
 
-        if (Input.GetKey(KeyCode.Z) && holsterCooldown <= 0f)
+        if (Input.GetKeyDown(KeyCode.Z) && holsterCooldown <= 0f)
         {
             holsterCooldown = MAX_HOLSTER_COOLDOWN;
             holstered = !holstered;
+            aimAngle = MIN_AIM_ANGLE;
+            
         }
 
     }

@@ -11,6 +11,10 @@ public class Projectile : MonoBehaviour {
         thisBody = GetComponent<Rigidbody2D>();
         thisBody.AddForce(transform.right * LAUNCH_FORCE);
         Debug.Log((Vector2) transform.right);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Projectile"),
+                                               LayerMask.NameToLayer("Character"), true);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Projectile"),
+                                               LayerMask.NameToLayer("Turtle"), true);
     }
 	
 	// Update is called once per frame
@@ -20,7 +24,9 @@ public class Projectile : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        Destroy(gameObject);
+
+            Destroy(gameObject);
+      
     }
 
     void OnBecameInvisible()
