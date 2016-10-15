@@ -9,8 +9,13 @@ public class Character : MonoBehaviour {
     public const float SLOW_FORCE = 20f;
     public const float KNOCKBACK_FORCE = 2000f;
     public const float MAX_AIM_ANGLE = 75f;
+<<<<<<< HEAD
     public const float MIN_AIM_ANGLE = -40f;
     public const float ANGLE_AIM_RATE = 30f;
+=======
+    public const float MIN_AIM_ANGLE = -30f;
+    public const float ANGLE_AIM_RATE = 40f;
+>>>>>>> origin/dev/characterSpriteAnimation
 
     public float groundRayDist;
     private int invinceTimer = 0;
@@ -25,14 +30,17 @@ public class Character : MonoBehaviour {
     private bool ladder = false;
     private bool door = false;
     private bool ladderDown = false;
+    private GameObject arm;
     Rigidbody2D thisBody;
 
     public int faceDirection = 1;
     public float aimAngle = 15f;
+    public Vector3 armOffset;
 
     public const float MAX_PROJECTILE_COOLDOWN = 1f;
     public const float MAX_HOLSTER_COOLDOWN = 1f;
-    public Transform projectile;
+    public Transform prefabProjectile;
+    public Transform prefabArm;
 
     private float projectileCooldown = 0f;
     private float holsterCooldown = 0f;
@@ -42,8 +50,10 @@ public class Character : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        arm = gameObject.transform.Find("CharacterArm").gameObject;
         transform.position = new Vector2(-3, -3);
         holstered = true;
+        armOffset = new Vector3(-0.25f, 2f, 0f);
         thisBody = GetComponent<Rigidbody2D>();
         gameManager = (GameManager)GameObject.Find("GameManager").GetComponent<GameManager>();
 	}
@@ -80,8 +90,9 @@ public class Character : MonoBehaviour {
                 forceApply = walkUnholsteredForce;
                 maxSpeed = MAX_WALK_UNHOLSTERED_SPEED;
             }
-            else
+            else if (faceDirection == 1)
             {
+                transform.localScale += new Vector3(-2f * transform.localScale.x, 0, 0);
                 faceDirection = -1;
             }
 
@@ -105,8 +116,9 @@ public class Character : MonoBehaviour {
                 forceApply = walkUnholsteredForce;
                 maxSpeed = MAX_WALK_UNHOLSTERED_SPEED;
             }
-            else
+            else if (faceDirection == -1)
             {
+                transform.localScale += new Vector3 (-2f * transform.localScale.x, 0, 0);
                 faceDirection = 1;
             }
 
@@ -155,6 +167,8 @@ public class Character : MonoBehaviour {
                 {
                     aimAngle = MAX_AIM_ANGLE;
                 }
+                arm.transform.localEulerAngles = new Vector3(0, 0, aimAngle);
+                arm.transform.localPosition = armOffset + new Vector3(Mathf.Cos(aimAngle * Mathf.Deg2Rad), Mathf.Sin(aimAngle * Mathf.Deg2Rad), 0) * 2f;
             }
         }
         ladderDown = false;
@@ -177,6 +191,8 @@ public class Character : MonoBehaviour {
                 {
                     aimAngle = MIN_AIM_ANGLE;
                 }
+                arm.transform.localEulerAngles = new Vector3(0, 0, aimAngle);
+                arm.transform.localPosition = armOffset + new Vector3(Mathf.Cos(aimAngle * Mathf.Deg2Rad), Mathf.Sin(aimAngle * Mathf.Deg2Rad), 0) * 2f;
             }
         }
         moving = false;
@@ -189,7 +205,7 @@ public class Character : MonoBehaviour {
             {
                 trueAngle = 180 - trueAngle;
             }
-            Instantiate(projectile, gameObject.transform.position + new Vector3(Mathf.Cos(trueAngle * Mathf.Deg2Rad), Mathf.Sin(trueAngle* Mathf.Deg2Rad)), Quaternion.AngleAxis(trueAngle, Vector3.forward));
+            Instantiate(prefabProjectile, arm.transform.position + new Vector3(Mathf.Cos(trueAngle * Mathf.Deg2Rad), Mathf.Sin(trueAngle* Mathf.Deg2Rad)), Quaternion.AngleAxis(trueAngle, Vector3.forward));
         }
 
         if (Input.GetKeyDown(KeyCode.Z) && holsterCooldown <= 0f)
