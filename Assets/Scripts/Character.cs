@@ -140,7 +140,7 @@ public class Character : MonoBehaviour {
             {
                 thisBody.AddForce(new Vector2(-KNOCKBACK_FORCE, 0));
             }
-            else
+            else if(thisBody.velocity.x < 0)
             {
                 thisBody.AddForce(new Vector2(KNOCKBACK_FORCE, 0));
             }
@@ -182,6 +182,11 @@ public class Character : MonoBehaviour {
                                                LayerMask.NameToLayer("Ground"), false);
             }
         }
+    }
+
+    public int getHealth()
+    {
+        return health;
     }
     
     
