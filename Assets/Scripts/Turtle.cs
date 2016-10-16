@@ -5,6 +5,10 @@ public class Turtle : MonoBehaviour {
 
     public GameObject dummy;
     public GameObject key;
+    public GameObject fireball1;
+    public GameObject fireball2;
+
+    private int fireballTimer;
 
     public Vector3 keyPos;
     private int health = 10;
@@ -17,7 +21,21 @@ public class Turtle : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    
+        if(fireballTimer == 180)
+        {
+            Instantiate(fireball1, new Vector3(transform.position.x,
+                             transform.position.y + 2f, transform.position.z), new Quaternion());
+        }
+        else if(fireballTimer == 360)
+        {
+            Instantiate(fireball2, new Vector3(transform.position.x,
+                             transform.position.y + 2f, transform.position.z), new Quaternion());
+        }
+        else if(fireballTimer > 360)
+        {
+            fireballTimer = 0;
+        }
+        fireballTimer++;
 	}
 
     void OnCollisionEnter2D(Collision2D coll)

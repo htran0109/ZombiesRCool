@@ -28,17 +28,18 @@ public class Character : MonoBehaviour {
     private GameObject arm;
     Rigidbody2D thisBody;
 
+    public AudioSource gunNoise;
+    public AudioSource keyNoise;
+
     public int faceDirection = 1;
     public float aimAngle = 15f;
     public Vector3 armOffset;
 
     public const float MAX_PROJECTILE_COOLDOWN = 1f;
-    public const float MAX_HOLSTER_COOLDOWN = 1f;
     public Transform prefabProjectile;
     public Transform prefabArm;
 
     private float projectileCooldown = 0f;
-    private float holsterCooldown = 0f;
     RaycastHit2D ground;
 
     private GameManager gameManager;
@@ -60,11 +61,6 @@ public class Character : MonoBehaviour {
         if (projectileCooldown > 0)
         {
             projectileCooldown -= Time.deltaTime;
-        }
-
-        if (holsterCooldown > 0)
-        {
-            holsterCooldown -= Time.deltaTime;
         }
 
         slowWalk();
@@ -131,6 +127,7 @@ public class Character : MonoBehaviour {
             if (door && GameManager.keyFound)
             {
                 gameManager.switchLevel();
+                door = false;
                 GameManager.keyFound = false;
             }
             else if (!ladder && holstered)
@@ -194,6 +191,7 @@ public class Character : MonoBehaviour {
         
         if(Input.GetKey(KeyCode.X) && projectileCooldown <= 0f && !holstered)
         {
+            gunNoise.Play();
             projectileCooldown = MAX_PROJECTILE_COOLDOWN;
             float trueAngle = aimAngle;
             if (faceDirection < 0)
@@ -203,9 +201,9 @@ public class Character : MonoBehaviour {
             Instantiate(prefabProjectile, arm.transform.position + new Vector3(Mathf.Cos(trueAngle * Mathf.Deg2Rad), Mathf.Sin(trueAngle* Mathf.Deg2Rad)), Quaternion.AngleAxis(trueAngle, Vector3.forward));
         }
 
-        if (Input.GetKeyDown(KeyCode.Z) && holsterCooldown <= 0f)
+        if (Input.GetKeyDown(KeyCode.Z))
         {
-            holsterCooldown = MAX_HOLSTER_COOLDOWN;
+            
             holstered = !holstered;
             aimAngle = MIN_AIM_ANGLE;
             arm.transform.localEulerAngles = new Vector3(0, 0, aimAngle);
@@ -246,6 +244,7 @@ public class Character : MonoBehaviour {
             }
             if(health == 0)
             {
+                gameManager.loseGame();
                 Destroy(gameObject);
             }
         }
@@ -255,8 +254,14 @@ public class Character : MonoBehaviour {
     {
         if(coll.gameObject.name.Contains("Key"))
         {
+            keyNoise.Play();
             GameManager.keyFound = true;
             GameObject.Destroy(coll.gameObject);
+        }
+        if(coll.gameObject.name.Contains("Enemy") && invinceTimer <= 0)
+        {
+            invinceTimer = 20;
+            health--;
         }
     }
 

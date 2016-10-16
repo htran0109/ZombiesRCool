@@ -11,8 +11,11 @@ public class GameManager : MonoBehaviour {
     public GameObject key;
     public GameObject door;
     public GameObject turtle;
+    public GameObject winScreen;
+    public GameObject loseScreen;
 
 
+    
     public Vector3 ladder1Level2;
     public Vector3 ladder2Level2;
     public Vector3 bottomGroundLevel2;
@@ -21,8 +24,10 @@ public class GameManager : MonoBehaviour {
     public Vector3 characterLevel2;
     public Vector3 turtleLevel2;
     public Vector3 doorLevel2;
-	// Use this for initialization
-	void Start () {
+    public Vector3 winScreenPos;
+    public Vector3 loseScreenPos;
+    // Use this for initialization
+    void Start () {
 	
 	}
 	
@@ -34,9 +39,10 @@ public class GameManager : MonoBehaviour {
     public void switchLevel()
     {
         Debug.Log("Switching Level");
-        if(level == 1)
+        if (level == 1)
         {
             level++;
+            keyFound = false;
             foreach (GameObject o in Object.FindObjectsOfType<GameObject>())
             {
                 if (!o.name.Contains("Character") && !o.name.Contains("Health")
@@ -54,5 +60,30 @@ public class GameManager : MonoBehaviour {
             Instantiate(door, doorLevel2, new Quaternion());
             GameObject.Find("Character").transform.position = characterLevel2;
         }
+        else if (level == 2)
+        {
+            level++;
+            keyFound = false;
+            foreach (GameObject o in Object.FindObjectsOfType<GameObject>())
+            {
+                if (!o.name.Contains("GameManager") && !o.name.Contains("Camera"))
+                {
+                    Destroy(o);
+                }
+            }
+            Instantiate(winScreen, winScreenPos, new Quaternion());
+        }
+    }
+
+
+        public void loseGame() {
+        foreach (GameObject o in Object.FindObjectsOfType<GameObject>())
+        {
+            if (!o.name.Contains("GameManager") && !o.name.Contains("Camera"))
+            {
+                Destroy(o);
+            }
+        }
+        Instantiate(loseScreen, loseScreenPos, new Quaternion());
     }
 }
